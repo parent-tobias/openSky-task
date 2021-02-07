@@ -74,7 +74,7 @@ const Login = () => {
             setValues({ ...values, error: false });
           }}
         >
-          Invalid Credentials!
+          Invalid Credentials! Use 'demo' as username and password
         </Alert>
       )}
       <form
