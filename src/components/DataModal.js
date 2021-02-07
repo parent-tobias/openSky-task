@@ -24,6 +24,28 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const [arrivalUrl, setArrivalUrl] = useState('');
+  const [departureUrl, setDepartureUrl] = useState('');
+
+  const setupUrls = (begin=Date.now(), end=Date.now()) => {
+    const configureArrivalUrl = (airport, begin, end) => `https://opensky-network.org/api/flights/arrival?airport=${airport}&begin=${begin}&end=${end}` 
+    const configureDepartureUrl = (airport, begin, end) => `https://opensky-network.org/api/flights/departure?airport=${airport}&begin=${begin}&end=${end}` 
+
+    begin = begin.valueOf().toString().substring(0, 10);
+    end = end.valueOf().toString().substring(0, 10);
+
+    setArrivalUrl(configureArrivalUrl(itemId, begin, end));
+    setDepartureUrl(configureDepartureUrl(itemId, begin, end));
+  }
+
+  const onChangeHandler = (timeOption) => {
+    const begin = new Date()
+    begin.setHours(timeOption.value);
+    const end = Date.now();
+    setupUrls(begin, end);
+  }
+
+
 
   return (
     <Modal
@@ -41,16 +63,15 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
       <Fade in={showModal}>
         <div className={classes.paper}>
           <h2 id="transition-modal-title">Flight Details</h2>
+          <div>
+            <h3>Departures</h3><h3>Arrivals</h3>
+          </div>
           <Combo
-            label="Departures"
-            url="https://country.register.gov.uk/records.json?page-size=5"
+            label="For the last:"
+            onChangeHandler={onChangeHandler}
           />
-          <br />
-          <Combo
-            label="Arrivals"
-            url="https://country.register.gov.uk/records.json?page-size=3"
-          />
-          <p>{itemId}</p>
+
+          <p>{data.length>0?data : 'No results found'}</p>
         </div>
       </Fade>
     </Modal>
