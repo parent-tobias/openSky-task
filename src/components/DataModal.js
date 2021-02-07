@@ -70,8 +70,8 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
 
   const [data, setData] = useState({arrivals: [], departures: []});
   const [dataFetched, setDataFetched] = useState(false);
-  const [arrivalUrl, setArrivalUrl] = useState("");
-  const [departureUrl, setDepartureUrl] = useState("");
+  const [arrivalUrl, setArrivalUrl] = useState(`https://opensky-network.org/api/flights/arrival?airport=${itemId}&begin=${(Date.now().valueOf()-3600).toString().substring(0, 10)}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
+  const [departureUrl, setDepartureUrl] = useState(`https://opensky-network.org/api/flights/departure?airport=${itemId}&begin=${(Date.now().valueOf()-3600).toString().substring(0, 10)}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
 
   const setupUrls = (begin = Date.now(), end = Date.now()) => {
     const configureArrivalUrl = (airport, begin, end) =>
@@ -87,10 +87,12 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
   }
 
   const onChangeHandler = async (timeOption) => {
+    timeOption = timeOption || {value: 0};
+
     const begin = new Date()
-    begin.setHours(timeOption.value);
+    if(timeOption.value > 0) begin.setHours(timeOption.value);
     const end = Date.now();
-    await setupUrls(begin, end);
+    setupUrls(begin, end);
     
     let arrivals = await fetch(arrivalUrl)
       arrivals = await arrivals.json()
@@ -144,7 +146,7 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
           <Combo label="For the last:" onChangeHandler={onChangeHandler} />
           <TabPanel className={classes.flightsContainer} value={tab} index={0}>
             {data.departures?.length > 0 
-              ? data.departures.map(record => <FlightDetail key={JSON.stringify()} {...record} />)
+              ? data.departures.map(record => <FlightDetail className={classes.flightDetail} key={JSON.stringify(record)} {...record} />)
               : 'No departures found'}
           </TabPanel>
           <TabPanel className={classes.flightsContainer} value={tab} index={1}>
