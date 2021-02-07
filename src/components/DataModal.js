@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
   },
   flightsContainer: {
-    height: '20vh',
+    height: '40vh',
     background: 'ivory',
     borderRadius: 5,
     overflow: 'scroll',
@@ -65,13 +64,13 @@ const FlightDetail = ({className, callsign, icao24, firstSeen, lastSeen, estDepa
 }
 
 const DataModal = ({ showModal, handleClose, itemId }) => {
+  const icao24 = itemId;
   const classes = useStyles();
   const [tab, setTab] = useState(0);
-
+  
   const [data, setData] = useState({arrivals: [], departures: []});
-  const [dataFetched, setDataFetched] = useState(false);
-  const [arrivalUrl, setArrivalUrl] = useState(`https://opensky-network.org/api/flights/arrival?airport=${itemId}&begin=${(Date.now().valueOf()-3600).toString().substring(0, 10)}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
-  const [departureUrl, setDepartureUrl] = useState(`https://opensky-network.org/api/flights/departure?airport=${itemId}&begin=${(Date.now().valueOf()-3600).toString().substring(0, 10)}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
+  const [arrivalUrl, setArrivalUrl] = useState(`https://opensky-network.org/api/flights/arrival?airport=${itemId}&begin=${Number(Date.now().valueOf().toString().substring(0, 10))-36000}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
+  const [departureUrl, setDepartureUrl] = useState(`https://opensky-network.org/api/flights/departure?airport=${itemId}&begin=${Number(Date.now().valueOf().toString().substring(0, 10))-36000}&end=${Date.now().valueOf().toString().substring(0, 10)}`);
 
   const setupUrls = (begin = Date.now(), end = Date.now()) => {
     const configureArrivalUrl = (airport, begin, end) =>
@@ -79,19 +78,15 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
     const configureDepartureUrl = (airport, begin, end) =>
       `https://opensky-network.org/api/flights/departure?airport=${airport}&begin=${begin}&end=${end}`;
 
-    begin = begin.valueOf().toString().substring(0, 10);
-    end = end.valueOf().toString().substring(0, 10);
-
-    setArrivalUrl(configureArrivalUrl(itemId, begin, end));
-    setDepartureUrl(configureDepartureUrl(itemId, begin, end));
+    setArrivalUrl(configureArrivalUrl(icao24, begin, end));
+    setDepartureUrl(configureDepartureUrl(icao24, begin, end));
   }
 
   const onChangeHandler = async (timeOption) => {
     timeOption = timeOption || {value: 0};
 
-    const begin = new Date()
-    if(timeOption.value > 0) begin.setHours(timeOption.value);
-    const end = Date.now();
+    const begin = Math.round(new Date()/1000)+(timeOption.value*3600)
+    const end = Math.round(Date.now()/1000);
     setupUrls(begin, end);
     
     let arrivals = await fetch(arrivalUrl)

@@ -81,16 +81,8 @@
 // }
 
 import React from "react";
-import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import CircularProgress from "@material-ui/core/CircularProgress";
-
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay);
-  });
-}
 
 export default function Combo({ url, label, onChangeHandler }) {
   const [open, setOpen] = React.useState(false);
