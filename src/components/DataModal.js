@@ -20,63 +20,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DataModal = ({ showModal, handleClose, url, ...props }) => {
+const DataModal = ({ showModal, handleClose, url, itemId }) => {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
 
-  // const fetchData = async () => {
-  //   const res = await axios.get({ url });
-  //   setData({ ...data, data: res.data });
-  //   setDataFetched(true);
-  // };
-  // useEffect(() => {
-  //   try {
-  //     fetchData();
-  //   } catch (err) {
-  //     console.error(err.message);
-  //   }
-  // }, []);
-
-  // console.log(data);
-  // console.log(id);
   return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={showModal}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={showModal}>
-          {/* {dataFetched ? ( */}
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">Flight Details</h2>
-            <Combo
-              label="Departures"
-              url="https://country.register.gov.uk/records.json?page-size=5"
-            />
-            <br />
-            <Combo
-              label="Arrivals"
-              url="https://country.register.gov.uk/records.json?page-size=3"
-            />
-            <p>Flight no 2</p>
-            <p>Flight no 2</p>
-            <p>Flight no 2</p>
-          </div>
-          {/* // ) : (
-          //   <p>Loading...</p>
-          // )} */}
-        </Fade>
-      </Modal>
-    </div>
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={showModal}
+      onClose={handleClose}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={showModal}>
+        <div className={classes.paper}>
+          <h2 id="transition-modal-title">Flight Details</h2>
+          <Combo
+            label="Departures"
+            url="https://country.register.gov.uk/records.json?page-size=5"
+          />
+          <br />
+          <Combo
+            label="Arrivals"
+            url="https://country.register.gov.uk/records.json?page-size=3"
+          />
+          <p>{itemId}</p>
+        </div>
+      </Fade>
+    </Modal>
   );
 };
 export default DataModal;

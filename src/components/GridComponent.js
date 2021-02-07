@@ -20,33 +20,42 @@ const useStyles = makeStyles((theme) => ({
 const GridComponent = () => {
   const classes = useStyles();
 
+  let airportId;
+
   const [showModal, setShowModal] = useState(false);
+
+  console.log({ airportId });
   return (
     <div>
       <Grid container spacing={5}>
-        {airports.map((airport) => (
-          <Grid item xs>
-            <Card className={classes.root} onClick={() => setShowModal(true)}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt={airport.name}
-                  height="150"
-                  image={airport.image}
-                  title={airport.name}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="h4">
-                    {airport.name}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
+        {airports.map((airport) => {
+          airportId = airport.name;
+          console.log({ airportId });
+          return (
+            <Grid item xs key={airport.id}>
+              <Card className={classes.root} onClick={() => setShowModal(true)}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    alt={airport.name}
+                    height="150"
+                    image={airport.image}
+                    title={airport.name}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h6" component="h4">
+                      {airport.name}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          );
+        })}
         <DataModal
           showModal={showModal}
           handleClose={() => setShowModal(false)}
+          itemId={airportId}
         />
       </Grid>
     </div>
