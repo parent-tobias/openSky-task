@@ -83,19 +83,21 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
   }
 
   const onChangeHandler = async (timeOption) => {
-    timeOption = timeOption || {value: 0};
+    if(timeOption){
+      const begin = Math.round(new Date()/1000)+(timeOption.value*3600)
+      const end = Math.round(Date.now()/1000);
+      setupUrls(begin, end);
+      
+      let arrivals = await fetch(arrivalUrl)
+       arrivals = await arrivals.json()
 
-    const begin = Math.round(new Date()/1000)+(timeOption.value*3600)
-    const end = Math.round(Date.now()/1000);
-    setupUrls(begin, end);
-    
-    let arrivals = await fetch(arrivalUrl)
-      arrivals = await arrivals.json()
+      let departures = await fetch(departureUrl)
+       departures = await departures.json();
 
-    let departures = await fetch(departureUrl)
-      departures = await departures.json();
-
-    setData({arrivals, departures})
+      setData({arrivals, departures})
+    } else {
+      setData({arrivals:[], departures: []})
+    }
   }
 
   const changeTab = (event, newValue) =>{
