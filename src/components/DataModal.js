@@ -68,6 +68,9 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
         .then( (result) => setData(result) );
   }
 
+  const checkAirport = ()=>{
+    if(!arrivalUrl.includes(itemId)) setData([]);
+  }
 
 
   return (
@@ -76,6 +79,7 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
       aria-describedby="transition-modal-description"
       className={classes.modal}
       open={showModal}
+      onRendered={checkAirport}
       onClose={handleClose}
       closeAfterTransition
       BackdropComponent={Backdrop}
