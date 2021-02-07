@@ -18,6 +18,12 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  flightsContainer: {
+    height: '20vh',
+    background: 'ivory',
+    borderRadius: 5,
+    overflow: 'scroll',
+  }
 }));
 
 const FlightDetail = ({callsign, icao24, firstSeen, lastSeen, estDepartureAirport, estArrivalAirport}) =>{
@@ -98,8 +104,8 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
             onChangeHandler={onChangeHandler}
           />
 
-          <div>{data.length>0 
-            ?data.map(record => <FlightDetail {...record} />) : 'No results found'}
+          <div className={classes.flightsContainer} >{data.length>0 
+            ?data.map(record => <FlightDetail key={JSON.stringify(record)} {...record} />) : 'No results found'}
           
           </div>
         </div>
