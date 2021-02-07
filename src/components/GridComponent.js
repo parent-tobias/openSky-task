@@ -22,7 +22,7 @@ const GridComponent = () => {
 
   let airportId;
 
-  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({show:false, itemId:""});
 
   console.log({ airportId });
   return (
@@ -33,7 +33,7 @@ const GridComponent = () => {
           console.log({ airportId });
           return (
             <Grid item xs key={airport.id}>
-              <Card className={classes.root} onClick={() => setShowModal(true)}>
+              <Card className={classes.root} onClick={() => setModalContent({show:true, itemId:airport.id})}>
                 <CardActionArea>
                   <CardMedia
                     component="img"
@@ -53,9 +53,9 @@ const GridComponent = () => {
           );
         })}
         <DataModal
-          showModal={showModal}
-          handleClose={() => setShowModal(false)}
-          itemId={airportId}
+          showModal={modalContent.show}
+          handleClose={() => setModalContent({...modalContent, show:false})}
+          itemId={modalContent.itemId}
         />
       </Grid>
     </div>
@@ -63,3 +63,4 @@ const GridComponent = () => {
 };
 
 export default GridComponent;
+
