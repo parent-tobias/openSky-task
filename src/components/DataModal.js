@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     background: 'ivory',
     borderRadius: 5,
     overflow: 'scroll',
+  },
+  flightDetail: {
+    margin: '1em 0',
   }
 }));
 
@@ -50,8 +53,8 @@ function TabPanel(props) {
   );
 }
 
-const FlightDetail = ({callsign, icao24, firstSeen, lastSeen, estDepartureAirport, estArrivalAirport}) =>{
-  return (<div>
+const FlightDetail = ({className, callsign, icao24, firstSeen, lastSeen, estDepartureAirport, estArrivalAirport}) =>{
+  return (<div className={className} >
     <span>Callsign: {callsign}</span><br/>
     <span>Address of the transponder (icao24): {icao24}</span><br/>
     <span>Est. time of arrival: {new Date(lastSeen).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br />
@@ -88,12 +91,14 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
     begin.setHours(timeOption.value);
     const end = Date.now();
     await setupUrls(begin, end);
-    fetch(arrivalUrl)
-      .then(rs=>rs.json() )
-      .then(result=> setData({...data, arrivals: result}))
-    fetch(departureUrl)
-      .then(rs=>rs.json() )
-      .then(result=> setData({...data, departures: result}))
+    
+    let arrivals = await fetch(arrivalUrl)
+      arrivals = await arrivals.json()
+
+    let departures = await fetch(departureUrl)
+      departures = await departures.json();
+
+    setData({arrivals, departures})
   }
 
   const changeTab = (event, newValue) =>{
@@ -103,7 +108,7 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
 
 
   const checkAirport = ()=>{
-    if(!arrivalUrl.includes(itemId)) setData([]);
+    if(!arrivalUrl.includes(itemId)) setData({arrivals:[], departures: []});
   }
 
 
@@ -144,7 +149,7 @@ const DataModal = ({ showModal, handleClose, itemId }) => {
           </TabPanel>
           <TabPanel className={classes.flightsContainer} value={tab} index={1}>
             {data.arrivals?.length > 0 
-              ? data.arrivals.map(record => <FlightDetail key={JSON.stringify()} {...record} />)
+              ? data.arrivals.map(record => <FlightDetail className={classes.flightDetail} key={JSON.stringify()} {...record} />)
               : 'No arrivals found'}
           </TabPanel>
         </div>
