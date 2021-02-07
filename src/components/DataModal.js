@@ -20,6 +20,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const FlightDetail = ({callsign, icao24, firstSeen, lastSeen, estDepartureAirport, estArrivalAirport}) =>{
+  return (<div>
+    <span>Callsign: {callsign}</span><br/>
+    <span>Address of the transponder (icao24): {icao24}</span><br/>
+    <span>Est. time of arrival: {new Date(lastSeen).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br />
+    <span>Est. time of departure: {new Date(firstSeen).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br/>
+    <span>Arrival airport: {estArrivalAirport }</span><br/>
+    <span>Departure airport: {estDepartureAirport }</span>
+  </div>)
+}
+
 const DataModal = ({ showModal, handleClose, url, itemId }) => {
   const classes = useStyles();
   const [data, setData] = useState([]);
@@ -46,13 +57,15 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
     await setupUrls(begin, end);
   }
 
-  const onChangeTab = (which) =>{
+  const changeTab = (which) =>{
     setWhichTab(which);
     loadFlights();
   }
 
-  const loadFlights = async () =>{
-    
+  const loadFlights = () =>{
+    fetch(whichTab==='arrivals' ? arrivalUrl : departureUrl)
+        .then(res => res.json())
+        .then( (result) => setData(result) );
   }
 
 
@@ -74,14 +87,17 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
         <div className={classes.paper}>
           <h2 id="transition-modal-title">Flight Details</h2>
           <div>
-            <h3>Departures</h3><h3>Arrivals</h3>
+            <h3 onClick={()=>changeTab('departures')}>Departures</h3><h3 onClick={()=>changeTab('arrivals')}>Arrivals</h3>
           </div>
           <Combo
             label="For the last:"
             onChangeHandler={onChangeHandler}
           />
 
-          <p>{data.length>0?data : 'No results found'}</p>
+          <div>{data.length>0 
+            ?data.map(record => <FlightDetail {...record} />) : 'No results found'}
+          
+          </div>
         </div>
       </Fade>
     </Modal>
