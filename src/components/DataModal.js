@@ -26,6 +26,7 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
   const [dataFetched, setDataFetched] = useState(false);
   const [arrivalUrl, setArrivalUrl] = useState('');
   const [departureUrl, setDepartureUrl] = useState('');
+  const [whichTab, setWhichTab] = useState('arrivals');
 
   const setupUrls = (begin=Date.now(), end=Date.now()) => {
     const configureArrivalUrl = (airport, begin, end) => `https://opensky-network.org/api/flights/arrival?airport=${airport}&begin=${begin}&end=${end}` 
@@ -38,11 +39,20 @@ const DataModal = ({ showModal, handleClose, url, itemId }) => {
     setDepartureUrl(configureDepartureUrl(itemId, begin, end));
   }
 
-  const onChangeHandler = (timeOption) => {
+  const onChangeHandler = async (timeOption) => {
     const begin = new Date()
     begin.setHours(timeOption.value);
     const end = Date.now();
-    setupUrls(begin, end);
+    await setupUrls(begin, end);
+  }
+
+  const onChangeTab = (which) =>{
+    setWhichTab(which);
+    loadFlights();
+  }
+
+  const loadFlights = async () =>{
+    
   }
 
 
