@@ -56,8 +56,8 @@ const FlightDetail = ({className, callsign, icao24, firstSeen, lastSeen, estDepa
   return (<div className={className} >
     <span>Callsign: {callsign}</span><br/>
     <span>Address of the transponder (icao24): {icao24}</span><br/>
-    <span>Est. time of arrival: {new Date(lastSeen).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br />
-    <span>Est. time of departure: {new Date(firstSeen).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br/>
+    <span>Est. time of arrival: {new Date(lastSeen*1000).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br />
+    <span>Est. time of departure: {new Date(firstSeen*1000).toLocaleString('en-GB', {dateStyle:'full', timeStyle:'long'}) }</span><br/>
     <span>Arrival airport: {estArrivalAirport }</span><br/>
     <span>Departure airport: {estDepartureAirport }</span>
   </div>)
